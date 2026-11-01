@@ -16,6 +16,47 @@ Produces a folder named after the clip, next to it (`my_rally/`), holding:
 | `my_rally_hud.toml` | players and fixes; created on the first run |
 | `my_rally_hud_work/` | cached steps (YOLO, camera, court, shuttle); delete it or pass `--fresh` to recompute |
 
+## Getting started
+
+Needs macOS or Linux with Python 3.12 and ffmpeg. An NVIDIA GPU or Apple Silicon makes it
+faster but is not required. Windows is untested.
+
+```bash
+brew install ffmpeg python@3.12          # Linux: use your package manager
+git clone https://github.com/randyvarianda/badminton-hud.git && cd badminton-hud
+python3.12 -m venv .venv && .venv/bin/pip install -e .
+mkdir -p ~/.local/bin && ln -sf "$PWD/.venv/bin/hud" ~/.local/bin/hud
+```
+
+`models/yolo11m.pt` is downloaded by Ultralytics on the first run.
+
+Then, for each clip:
+
+1. Run `hud my_rally.mp4`. The first run creates `my_rally/my_rally_hud.toml`.
+2. Put your 4 players in it (name, shirt colour, `near` or `far` side of the net) and run
+   the same command again.
+3. Open `my_rally/my_rally_HUD_report/index.html`. Check the court lines, the names and the
+   shots, and fix any warnings in the toml (see below).
+4. The result is `my_rally/my_rally_HUD.mp4`.
+
+### Filming tips
+
+These matter more than any setting in the tool:
+
+- Behind the baseline, centred and high up (2-3 m), on a tripod, with both baselines in
+  frame. Other views need `[court] points` (see below).
+- 60 fps or more, so fast shots aren't a blur. Lock exposure and focus (AE/AF lock on
+  iPhone).
+- Sound on, with no music over it: racket sounds give exact hit times.
+- Frame only your court, so shuttles from the next courts stay out.
+
+### Limits
+
+- One rally per clip, doubles (4 players).
+- Shirt colours must differ within each team.
+- Nothing is drawn on the shuttle: on real footage it is often too small or blurred to
+  follow reliably.
+
 ## Fixing a run
 
 Read the warnings in the report, then edit `my_rally_hud.toml` and run `hud my_rally.mov`
@@ -72,15 +113,5 @@ hud <out>/synth.mp4 && .venv/bin/python tests/eval_synth.py <out>
 
 `synth_rally.py` needs four person cut-outs (`near_red.png`, `near_pink.png`, `far_red.png`,
 `far_blue.png`) cropped from any real footage.
-
-## Setup
-
-```bash
-brew install ffmpeg python@3.12
-python3.12 -m venv .venv && .venv/bin/pip install -e .
-ln -sf "$PWD/.venv/bin/hud" ~/.local/bin/hud
-```
-
-`models/yolo11m.pt` is downloaded by Ultralytics on first use if missing.
 
 The full build prompt, matching the current behaviour, is in [PROMPT.md](PROMPT.md).
