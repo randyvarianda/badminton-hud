@@ -1,0 +1,15 @@
+[project]
+name = "badminton-hud"
+version = "0.1.0"
+description = "Game-style HUD for one-rally badminton clips"
+requires-python = ">=3.11"
+dependencies = ["ultralytics", "opencv-python-headless", "numpy", "scipy", "Pillow", "lap"]
+
+[project.scripts]
+hud = "hud.cli:main"
+
+[tool.setuptools]
+packages = ["hud"]
+
+[tool.setuptools.package-data]
+hud = ["fonts/*"]

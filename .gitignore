@@ -1,0 +1,7 @@
+.venv/
+models/*.pt
+*.egg-info/
+__pycache__/
+*_hud_work/
+*_HUD_report/
+*_HUD.mp4
